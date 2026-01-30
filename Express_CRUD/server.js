@@ -1,14 +1,12 @@
 import express from "express";
-import logfun from "./middleware";
+import { logfun, userValidation, authMiddleware } from "./middleware.js";
+
 const app = express();
 
-app.use(express.json());
-app.use(logfun) 
-
-let data = [
+const data = [
   {
     id: 1,
-    username: "qwert",
+    username: "qwer",
     password: "qwer123",
   },
   {
@@ -17,6 +15,9 @@ let data = [
     password: "1234",
   },
 ];
+
+app.use(express.json());
+app.use(logfun);
 
 app.get("/", (req, res) => {
   res.status(200).json({
@@ -31,25 +32,25 @@ app.get("/user", (req, res) => {
   });
 });
 
-app.post("/user", (req, res) => {
-  console.log(req.body);
+app.get("/user/:id", (req, res) => {
+  const id = parseInt(req.params.id);
+  const user = data.find((ele) => ele.id === id);
 
-  const { username, password } = req.body;
-  //validation
-  if (!username || !password) {
+  if (!user) {
     return res.status(400).json({
-      message: "username and password require",
+      message: "user not found",
     });
   }
 
-  if (password.length < 6) {
-    return res.status(400).json({
-      message: "password strength is weak",
-    });
-  }
+  res.status(200).json({
+    message: "user found",
+    user,
+  });
+});
 
+app.post("/user", userValidation, (req, res) => {
   let newuser = {
-    id: user.length + 1,
+    id: data.length + 1,
     ...req.body,
   };
 
@@ -60,21 +61,24 @@ app.post("/user", (req, res) => {
   });
 });
 
+
+app.get("/profile", authMiddleware, (req, res) => {
+  res.status(200).json({
+    message: "welcome to admin profile",
+  });
+});
+
 app.put("/user/:id", (req, res) => {
   let id = parseInt(req.params.id);
-  let {username} = req.body;
-    // find user by id
-  let userIdx = data.findIndex((ele) => ele.id == id);
+  let userIdx = data.findIndex((ele) => ele.id === id);
 
-  if (userIdx == -1) {
-    res.status(400).json({
+  if (userIdx === -1) {
+    return res.status(400).json({
       message: "user not found",
     });
   }
-  // create new updated user
-  let updatedUser = { ...data[userIdx], username: username };
-  // updated the data array
-  data[userIdx] = updatedUser;
+
+  data[userIdx] = { ...data[userIdx], ...req.body };
 
   res.status(200).json({
     message: "user updated",
@@ -82,22 +86,22 @@ app.put("/user/:id", (req, res) => {
 });
 
 app.delete("/user/:id", (req, res) => {
-    let log = `timestamp: ${new Date().toISOString()}, method: ${req.method}, endpoint: ${req.originalUrl}`;
-    console.log(log);
-    let id = parseInt(req.params.id);
-    let userIdx = data.findIndex((ele) => ele.id == id);
-    let deletedUser = data[userIdx];
-    if (userIdx == -1) {
-        res.status(400).json({
-        message: "user not found",
-        });
-    }
-  
-    data.splice(userIdx, 1);
-    res.status(200).json({
-        message: "user deleted",
-        user: deletedUser,
+  const id = parseInt(req.params.id);
+  const userIdx = data.findIndex((ele) => ele.id === id);
+
+  if (userIdx === -1) {
+    return res.status(400).json({
+      message: "user not found",
     });
+  }
+
+  const userdeleted = data[userIdx];
+  data.splice(userIdx, 1);
+
+  res.status(200).json({
+    message: "user deleted",
+    user: userdeleted,
+  });
 });
 
 app.listen(3000, () => {

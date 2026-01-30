@@ -1,0 +1,4 @@
+timestamp:2026-01-30T09:05:48.526Z URL:/user Method: GET 
+timestamp:2026-01-30T09:06:00.393Z URL:/user Method: POST 
+timestamp:2026-01-30T09:06:08.799Z URL:/user Method: GET 
+timestamp:2026-01-30T09:36:52.373Z URL:/profile?token=admin123 Method:GET
