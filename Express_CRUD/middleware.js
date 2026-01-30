@@ -25,6 +25,7 @@ const userValidation = (req, res, next) => {
 };
 
 
+
 const authMiddleware = (req, res, next) => {
   const { token } = req.query;
 
