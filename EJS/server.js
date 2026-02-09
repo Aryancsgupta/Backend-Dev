@@ -1,59 +1,82 @@
 import express from "express";
+import methodOverride from "method-override"
+
 const app = express();
+
 app.set("view engine", "ejs");
-app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride('_method'))
+
+app.use(express.urlencoded({extended:true}))
+
+
+let userData = [
+  { id: 1, name: "amit", age: 23,},
+];
+
+// render index page
 app.get("/", (req, res) => {
   res.render("index");
 });
-const userData = [
-    ];
 
-
-app.get("/user", (req, res) => {
-  
-
-  res.render("user", {userData});
-});
-
-app.post("/api/user", (req, res) => {
-  const{name, age} = req.body;
-  let newUserData = {
-    id:userData.length + 1,
-    name,
-    age,
-  };
-  userData.push(newUserData);
-  res.redirect("/user");
-});
-app.get("/delete/:id", (req, res) => {
+//render edit page
+app.get("/editpage/:id",(req,res)=>{
   const id = req.params.id;
-  const index = userData.findIndex((ele) => ele.id == id);
-  if (index !== -1) {
-    userData.splice(index, 1);
-  }else{
-    return res.send("User not found");
-  }
-  res.redirect("/user");  
-});
-app.get("/list", (req, res) => {
-  const arr = ["Ankur", "Rohan", "Sohan", "Mohan", "Mahesh"];
 
-  arr.forEach((ele) => {
-    console.log(ele);
-  });
-  app.get("/list", (req, res) => {
-  const arr = [];
+  const user = userData.find((ele)=> ele.id==id);
+  console.log(user)
 
-  if (arr.length>0) {
-    res.render("list",{arr});
-  } else {
-    res.send("Array khali hai");
-  }
+  res.render("edit",{userData:[user]})
+})
+
+// get user
+app.get("/user", (req, res) => {
+  res.render("user", { userData });
 });
 
+// add user
+app.post("/api/user",(req,res)=>{
 
-  res.render("list", { arr });
-});
+    const {name, age} = req.body;
+
+    let newUserData = {
+        id: userData.length+1,
+        name,
+        age
+    }
+    userData.push(newUserData);
+    res.redirect('/user')
+
+})
+
+//delete user
+app.delete("/api/user/:id",(req,res)=>{
+
+    const userid = req.params.id;
+
+    const useridx = userData.findIndex((ele)=> ele.id==userid);
+
+    if(useridx == -1){
+        return res.send("user not found")
+    }
+
+    userData.splice(useridx,1);
+
+    res.redirect("/user")
+
+})
+
+app.put("/api/user/:id",(req,res)=>{
+    const {name,age} = req.body;
+    const id = parseInt(req.params.id);
+    const userIdx = userData.findIndex((ele)=>ele.id===id);
+    if(userIdx ==-1){
+      return res.send("user not found");
+    }
+    userData[userIdx] = {id,name,age};
+    res.redirect("/user");
+})
+
 app.listen(3000, () => {
-  console.log("Server daud raha hai port no. 3000");
+  console.log("server is running");
 });
+
