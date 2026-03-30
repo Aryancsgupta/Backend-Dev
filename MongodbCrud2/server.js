@@ -5,6 +5,7 @@ import userRoutes from "./routes/userRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 
 dotenv.config();
+console.log('env MONGO_URI =', process.env.MONGO_URI);
 connectDB();
 
 const PORT = process.env.PORT || 5000;
