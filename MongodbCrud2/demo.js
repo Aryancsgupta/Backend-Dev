@@ -11,7 +11,7 @@ app.get('/set-cookie', (req, res) => {
     }
     const token = jwt.sign(user,"qwertyuiop,{expiresIn:'1h'}");
     console.log(token);
-    res.cookie('name',"Rohan", {httpOnly:true});
+    res.cookie('token', token, {httpOnly:true});
     res.send("Cookie has been set");
 });
 const authMiddleware = (req, res, next) => {
@@ -35,7 +35,7 @@ app.get('/profile', authMiddleware, (req, res) => {
 
 
 app.get('/logout', (req, res) => {
-    res.clearCookie('name');
+    res.clearCookie(token);
     res.send("You have been logged out");
 });
 
