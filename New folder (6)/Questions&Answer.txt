@@ -1,0 +1,56 @@
+FULL STACK ASSESSMENT
+SET -  1
+Name: Aryan Gupta
+Uni Roll no : 2315000460 
+Sec - 3H(11)
+
+
+Q1 Explain the Node.js Event Loop and how asynchronous operations are handled.
+Q2 Explain synchronous vs asynchronous file operations. When should each be used?
+Q3 Explain routing and middleware in Express. How do they work together in request handling?
+Q4 Explain MongoDB collections and documents. How does Mongoose help in schema design?
+Q5 Explain authentication and authorization. How are they implemented in backend systems?
+Q6 Build an Express application that:
+● Fetches data from an external API
+● Stores the data in a local file
+● Provides APIs:
+○ /data → return stored data
+○ /filter → return filtered results
+
+Requirements:
+● Logging middleware
+● Proper error handling
+● Async/await
+● Modular structure
+
+
+Ans1: Node.js is single-threaded that mean it executes one task at a time and  handle multiple operations efficiently using the Event Loop.
+The Event Loop continuously checks whether the call stack is empty and whether there are pending tasks in the callback queue.
+When an asynchronous operation  is initiated, Node.js sends it to background. Once the operation is completed, its callback is placed in the queue. The Event Loop then pushes this callback to the call stack when it becomes free.
+This allows Node.js to perform non-blocking operations and handle many requests efficiently.
+
+
+
+Ans2:  Synchronous: Synchronous file operations execute tasks one after another. Each task must finish before the next one starts. This blocks the execution of other operations. Synchronous operations should be used in small scripts or during application startup where blocking is acceptable.
+
+Asynchronous : Asynchronous file operations are non-blocking. They allow other tasks to run while the file operation is being completed in the background. Asynchronous operations should be used in servers and real-world applications because they improve performance and scalability.
+
+
+
+Ans 3: Routing in Express defines how an application responds to client requests for specific endpoints (URLs) and HTTP methods. 
+Middleware functions are functions that execute during the lifecycle of a request. They have access to the request and response objects and can modify them or pass control to the next function using the next() function. 
+In request handling, middleware runs first to process the request. After that, the request is passed to the appropriate route handler, which sends the response. next() is important part in middleware if we not use next() in middleware in this case flow of code not forwarded to apporiate route.
+
+
+Ans4:  MongoDB is a NoSQL database that stores data in a flexible, JSON-like format. the best point of Mongo db is , Its schema is not fixed that mean we create schema according to requirements. 
+A collection is similar to a table in relational databases, and a document is similar to a row. Each document is a JSON object containing key-value pairs.
+Mongoose is an Object Data Modeling (ODM) library for MongoDB. It allows developers to define schemas, which enforce structure on the data.
+Mongoose provides features like data validation, schema definition, and easier interaction with the database, making data more organized and consistent.
+
+
+
+Ans5: Authentication is the process of verifying the identity of a user. It answers the question: “Who are you?” This is usually done using login credentials such as email and password.
+Authorization is the process of determining what actions a user is allowed to perform. It answers the question: “What are you allowed to do?”
+In backend systems, authentication is typically implemented by verifying user credentials and generating a token (such as JWT). This token is sent with future requests.
+Authorization is implemented by verifying the token and checking the user’s role or permissions before allowing access to specific resources.
+ex :  chatgpt is best example for both. In Authentication chatgpt website  check  login credentials such as email and password and authorization check user have a paid subscription or not. if user have subscription in this case user have more credentials for chagpt use  and in free version user have a limited credentials for chatgpt use.
